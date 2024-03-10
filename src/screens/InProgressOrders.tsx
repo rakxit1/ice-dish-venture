@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { child, get, remove } from "firebase/database";
-import { dbRef } from "../../firebaseConfig";
+import { child, get, ref, remove, set } from "firebase/database";
+import { db, dbRef } from "../../firebaseConfig";
 import PendingOrdersHeader from "../components/PendingOrdersHeader";
 import { GolaDataType, OwnerDataType } from "./GolaData";
 import { Ionicons } from "@expo/vector-icons";
@@ -47,8 +47,12 @@ const InProgressOrders = () => {
     getInitData();
   }, []);
 
-  const onPressCompleteOrder = useCallback((id) => {
+  const onPressCompleteOrder = useCallback((id, finalData) => {
+    const date = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`;
+    const finalDate = date.replace(/\//g, "-");
+
     remove(child(dbRef, `/Orders/Pending/${id}`));
+    set(ref(db, `Orders/Completed/${finalDate}`), finalData);
     onRefresh();
   }, []);
 
@@ -102,7 +106,7 @@ const InProgressOrders = () => {
         <View style={styles.lowerLine} />
         <Button
           title="Order Completed"
-          onPress={() => onPressCompleteOrder(extraData.time)}
+          onPress={() => onPressCompleteOrder(extraData.time, item)}
         />
       </View>
     );
