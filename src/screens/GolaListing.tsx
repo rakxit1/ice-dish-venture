@@ -57,7 +57,6 @@ const GolaListing = () => {
     };
 
     const finalData = [...updatedData, orderTakerData];
-    console.log("finalData:", finalData);
 
     set(ref(db, `Orders/Pending/${finalDate}`), finalData);
     setIsModalVisible(false);
