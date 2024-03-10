@@ -1,12 +1,16 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
+import { store, persistor } from "./src/store/store";
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
+import MainScreen from "./src/screens/MainScreen";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Testing your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store={store}>
+      <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+        <MainScreen />
+      </PersistGate>
+    </Provider>
   );
 }
 
